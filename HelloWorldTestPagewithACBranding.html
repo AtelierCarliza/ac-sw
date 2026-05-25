@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello from Atelier Carliza Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --surface-2: #f5f5f5;
+      --text: #18181b;
+      --text-muted: #52525b;
+      --text-subtle: #a1a1aa;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.16);
+      --accent: #5e6ad2;
+      --accent-hover: #4f59c4;
+      --accent-bg: rgba(94, 106, 210, 0.08);
+      --success: #16a34a;
+      --success-bg: rgba(22, 163, 74, 0.08);
+      --warning: #d97706;
+      --warning-bg: rgba(217, 119, 6, 0.08);
+      --danger: #dc2626;
+      --danger-bg: rgba(220, 38, 38, 0.08);
+      --info: #0284c7;
+      --info-bg: rgba(2, 132, 199, 0.08);
+
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+
+      /* AC Brand Colors */
+      --ac-gold: #c4a779;
+      --ac-gold-light: #d4bc96;
+      --ac-gold-dark: #a8885a;
+      --ac-brown: #231f1a;
+      --ac-brown-mid: #3d3028;
+      --ac-cream: #ede8e0;
+      --ac-tan: #9a9088;
+    }
+
+    [data-theme="dark"] {
+      --bg: #09090b;
+      --surface: #131316;
+      --surface-2: #1c1c20;
+      --text: #fafafa;
+      --text-muted: #a1a1aa;
+      --text-subtle: #71717a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --accent: #7b85e3;
+      --accent-hover: #8d96e8;
+      --accent-bg: rgba(123, 133, 227, 0.10);
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.10);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.10);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.10);
+      --info: #38bdf8;
+      --info-bg: rgba(56, 189, 248, 0.10);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      transition: background 150ms ease, color 150ms ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .app-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .app-logo-mark {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--ac-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .app-logo-mark span {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ac-brown);
+      line-height: 1;
+    }
+
+    .app-logo-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 150ms ease, color 150ms ease;
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .btn-ghost:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px;
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 150ms ease;
+    }
+
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ac-gold), transparent);
+      opacity: 0.6;
+    }
+
+    .ac-ornament {
+      margin: 0 auto 24px;
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--ac-gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+      transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    .ac-ornament svg {
+      color: var(--ac-gold);
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ac-gold);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .greeting-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 38px;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 16px;
+      transition: opacity 300ms ease, transform 300ms ease;
+    }
+
+    .greeting-text.animate-out {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    .greeting-text.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .greeting-text .gold-accent {
+      color: var(--ac-gold);
+    }
+
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--ac-gold);
+      opacity: 0.4;
+      margin: 16px auto 24px;
+    }
+
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--ac-gold);
+      color: var(--ac-brown);
+      border: 1px solid var(--ac-gold);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 150ms ease, border-color 150ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary:hover {
+      background: var(--ac-gold-dark);
+      border-color: var(--ac-gold-dark);
+    }
+
+    .btn-primary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 150ms ease, border-color 150ms ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-2);
+      border-color: var(--text-subtle);
+    }
+
+    .btn-secondary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Counter section */
+    .counter-section {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .counter-stat {
+      text-align: center;
+    }
+
+    .counter-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ac-gold);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 4px;
+      transition: transform 150ms ease;
+    }
+
+    .counter-value.bump {
+      transform: scale(1.1);
+    }
+
+    .counter-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-subtle);
+    }
+
+    .counter-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--border);
+    }
+
+    /* Mood palette */
+    .mood-section {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      max-width: 640px;
+      width: 100%;
+    }
+
+    .mood-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .mood-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .mood-swatches {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mood-swatch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--surface);
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+
+    .mood-swatch:hover {
+      background: var(--surface-2);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+
+    .mood-swatch.active {
+      border-color: var(--ac-gold);
+      color: var(--ac-gold);
+      background: rgba(196, 167, 121, 0.08);
+    }
+
+    .mood-swatch:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .swatch-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Greeting states */
+    .greeting-container {
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 220px;
+      max-width: 320px;
+      pointer-events: auto;
+      animation: toastIn 200ms ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .toast.toast-exit {
+      animation: toastOut 200ms ease forwards;
+    }
+
+    .toast-icon {
+      flex-shrink: 0;
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-success .toast-icon { color: var(--success); }
+    .toast-info .toast-icon { color: var(--info); }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(8px); }
+    }
+
+    /* Footer */
+    .app-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-subtle);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ac-gold);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero-card {
+        padding: 32px 24px;
+      }
+
+      .greeting-text {
+        font-size: 28px;
+      }
+
+      .app-header {
+        padding: 10px 16px;
+      }
+
+      .counter-section {
+        gap: 16px;
+      }
+
+      .toast-container {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+      }
+
+      .toast {
+        max-width: 100%;
+      }
+    }
+
+    /* Shimmer for ornament on hover */
+    .hero-card:hover .ac-ornament {
+      opacity: 1;
+    }
+
+    /* Focus ring default */
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== AC Studio Auth Gate v1.0 ===== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style id="dn-auth-style">
+  html body > *:not(#dn-auth-overlay):not(script){display:none !important}
+  body{visibility:visible !important;background:#1a1612 !important}
+</style>
+<div id="dn-auth-overlay" style="position:fixed;inset:0;background:#1a1612;display:flex;align-items:center;justify-content:center;z-index:99999;color:#ede8e0;font-family:system-ui,-apple-system,sans-serif;padding:24px">
+  <div style="font-size:13px;color:#5a5248">Checking access…</div>
+</div>
+<script>
+(function(){
+  var SUPABASE_URL = 'https://qqkgtjfurjepaaglxohq.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_ENHkQtSkdu3MCN5oIWylYA_CMvAm3C0';
+  var APP_REQUEST_ID = 'b4b45fa4-4c52-416c-a42c-7ab5bea513f0';
+  var APP_TITLE = "Hello World Test Page with AC Branding";
+  var o = document.getElementById('dn-auth-overlay');
+  function gateBox(html){ o.innerHTML = '<div style="max-width:420px;width:100%;padding:32px;background:#231f1a;border:1px solid rgba(255,255,255,0.1);border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,0.6)">' + html + '</div>'; }
+  function showSignIn(){ gateBox('<div style="font-weight:600;font-size:18px;color:#c4a779;margin-bottom:6px">' + APP_TITLE + '</div><div style="font-size:13px;color:#9a9088;margin-bottom:22px">Sign in with your Atelier Carliza account to continue.</div><button id=\'dn-signin-btn\' style="width:100%;padding:11px;background:#c4a779;color:#1a1612;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Sign in with Google</button>'); document.getElementById('dn-signin-btn').addEventListener('click', async function(){ var btn=this; btn.disabled=true; btn.textContent='Redirecting…'; try { await sb.auth.signInWithOAuth({ provider:'google', options:{ scopes:'email profile', queryParams:{ hd: 'ateliercarliza.com' }, redirectTo: location.origin + location.pathname } }); } catch(e){ alert('Sign-in failed: ' + (e.message||e)); btn.disabled=false; btn.textContent='Sign in with Google'; } }); }
+  function showDenied(email){ gateBox('<div style="font-weight:600;font-size:18px;color:#c85050;margin-bottom:6px">Access denied</div><div style="font-size:13px;color:#ede8e0;margin-bottom:6px">You don\'t have access to <strong>' + APP_TITLE + '</strong>.</div><div style="font-size:12px;color:#5a5248;margin-bottom:18px">Signed in as <strong style="color:#ede8e0">' + (email||'?') + '</strong>. Contact your Atelier Carliza admin to request access.</div><button id=\'dn-req-btn\' style="width:100%;padding:11px;background:#c4a779;color:#1a1612;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:8px">Request access</button><button id=\'dn-signout-btn\' style="width:100%;padding:11px;background:transparent;color:#ede8e0;border:1px solid rgba(255,255,255,0.14);border-radius:8px;font-size:13px;cursor:pointer">Sign out</button>'); document.getElementById('dn-signout-btn').addEventListener('click', async function(){ try { await sb.auth.signOut(); } catch(e){} location.reload(); }); document.getElementById('dn-req-btn').addEventListener('click', async function(){ var btn=this; btn.disabled=true; btn.textContent='Sending…'; try { var session=(await sb.auth.getSession()).data.session; if(!session){ btn.textContent='Sign in first'; btn.disabled=false; return; } var resp = await fetch(SUPABASE_URL + '/rest/v1/access_requests', { method:'POST', headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+session.access_token, 'Content-Type':'application/json', 'Prefer':'return=minimal' }, body: JSON.stringify({ request_id: APP_REQUEST_ID, user_id: session.user.id, status:'pending' }) }); if(resp.ok){ btn.textContent='✓ Request sent'; btn.style.background='#5a9e7a'; btn.style.color='#ede8e0'; } else { var tt = await resp.text(); if(tt.indexOf('duplicate')!==-1 || tt.indexOf('23505')!==-1){ btn.textContent='Already requested'; } else { btn.textContent='Failed: '+tt.slice(0,40); btn.disabled=false; } } } catch(e){ btn.textContent='Failed: '+(e.message||e).slice(0,40); btn.disabled=false; } }); }
+  function reveal(){ var s=document.getElementById('dn-auth-style'); if(s) s.remove(); if(o && o.parentNode) o.parentNode.removeChild(o); }
+  if (!window.supabase || !window.supabase.createClient) { gateBox('<div style="color:#c85050">Supabase SDK failed to load. Reload the page.</div>'); return; }
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
+  (async function(){ try { var sr=await sb.auth.getSession(); var session=sr && sr.data && sr.data.session; if(!session){ showSignIn(); return; } if(location.hash && location.hash.indexOf('access_token')!==-1){ try { history.replaceState(null,'',location.pathname+location.search); } catch(e){} } var userId=session.user.id; var headers={ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+session.access_token }; var isAdmin=false,isCreator=false,isGranted=false; var checks=await Promise.all([ fetch(SUPABASE_URL+'/rest/v1/profiles?select=is_admin&id=eq.'+encodeURIComponent(userId),{headers}).then(r=>r.ok?r.json():[]).catch(()=>[]), fetch(SUPABASE_URL+'/rest/v1/requests?select=creator_user_id,creator_access_revoked&id=eq.'+APP_REQUEST_ID,{headers}).then(r=>r.ok?r.json():[]).catch(()=>[]), fetch(SUPABASE_URL+'/rest/v1/app_access?select=request_id&request_id=eq.'+APP_REQUEST_ID+'&user_id=eq.'+encodeURIComponent(userId),{headers}).then(r=>r.ok?r.json():[]).catch(()=>[]) ]); var prof=checks[0],reqRow=checks[1],grants=checks[2]; if(prof&&prof[0]) isAdmin=!!prof[0].is_admin; if(reqRow&&reqRow[0]) isCreator=(reqRow[0].creator_user_id===userId)&&!reqRow[0].creator_access_revoked; if(grants&&grants.length>0) isGranted=true; if(isAdmin||isCreator||isGranted){ reveal(); } else { showDenied(session.user.email); } } catch(e){ console.error('AC auth gate failed:',e); gateBox('<div style="color:#c85050;font-size:13px">Auth check failed: '+(e.message||e)+'</div>'); } })();
+})();
+</script>
+<!-- ===== END AC Studio Auth Gate ===== -->
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-logo">
+      <div class="app-logo-mark">
+        <span>AC</span>
+      </div>
+      <span class="app-logo-text">Atelier Carliza</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" id="theme-toggle" aria-label="Toggle theme">
+        <svg id="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg id="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="main-content">
+    <!-- Hero Card -->
+    <div class="hero-card">
+      <div class="ac-ornament" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+      </div>
+
+      <span class="eyebrow">Welcome</span>
+
+      <div class="greeting-container">
+        <h1 class="greeting-text animate-in" id="greeting-text">
+          Hello from <span class="gold-accent">Atelier Carliza</span> Studio
+        </h1>
+      </div>
+
+      <div class="divider" aria-hidden="true"></div>
+
+      <p class="hero-subtitle" id="hero-subtitle">
+        A refined creative studio where craftsmanship meets modern elegance. Explore our world of bespoke design.
+      </p>
+
+      <div class="action-row">
+        <button class="btn-primary" id="greeting-btn" onclick="cycleGreeting()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M20 7H4M20 12H4M20 17H4"/>
+          </svg>
+          Change Greeting
+        </button>
+        <button class="btn-secondary" id="sparkle-btn" onclick="triggerSparkle()">
+          Celebrate
+        </button>
+      </div>
+
+      <!-- Counter section -->
+      <div class="counter-section">
+        <div class="counter-stat">
+          <div class="counter-value" id="visit-count">1</div>
+          <div class="counter-label">Visits</div>
+        </div>
+        <div class="counter-divider" aria-hidden="true"></div>
+        <div class="counter-stat">
+          <div class="counter-value" id="click-count">0</div>
+          <div class="counter-label">Interactions</div>
+        </div>
+        <div class="counter-divider" aria-hidden="true"></div>
+        <div class="counter-stat">
+          <div class="counter-value" id="greeting-index-display">1</div>
+          <div class="counter-label">of <span id="greeting-total">6</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mood palette card -->
+    <div class="mood-section">
+      <div class="mood-header">
+        <span class="mood-title">Brand Palette</span>
+      </div>
+      <div class="mood-swatches" id="mood-swatches">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <span class="footer-text">Crafted by</span>&nbsp;
+    <span class="footer-brand">Atelier Carliza Studio</span>
+  </footer>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script>
+    (function() {
+      // ── Theme ──
+      var currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = currentTheme;
+
+      function applyTheme(theme) {
+        currentTheme = theme;
+        document.documentElement.dataset.theme = theme;
+        var sun = document.getElementById('theme-icon-sun');
+        var moon = document.getElementById('theme-icon-moon');
+        if (theme === 'dark') {
+          if (sun) sun.style.display = 'none';
+          if (moon) moon.style.display = 'block';
+        } else {
+          if (sun) sun.style.display = 'block';
+          if (moon) moon.style.display = 'none';
+        }
+      }
+
+      applyTheme(currentTheme);
+
+      var toggleBtn = document.getElementById('theme-toggle');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function() {
+          var next = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(next);
+          showToast(next === 'dark' ? 'Dark mode enabled' : 'Light mode enabled', 'info');
+        });
+      }
+
+      // ── State ──
+      var clickCount = 0;
+      var greetingIndex = 0;
+
+      var greetings = [
+        { text: 'Hello from <span class="gold-accent">Atelier Carliza</span> Studio', subtitle: 'A refined creative studio where craftsmanship meets modern elegance. Explore our world of bespoke design.' },
+        { text: 'Benvenuti ad <span class="gold-accent">Atelier Carliza</span>', subtitle: 'Where every detail tells a story of timeless beauty and meticulous care.' },
+        { text: 'Bienvenue chez <span class="gold-accent">Atelier Carliza</span>', subtitle: 'L\u2019art de vivre distilled into every piece we create.' },
+        { text: 'Welcome to the world of <span class="gold-accent">Carliza</span>', subtitle: 'Bespoke creations born from passion, tradition, and a relentless pursuit of perfection.' },
+        { text: '<span class="gold-accent">Atelier Carliza</span> &mdash; Est. with Love', subtitle: 'Every stitch, every curve, every moment crafted with intention and devotion.' },
+        { text: 'The House of <span class="gold-accent">Carliza</span> Greets You', subtitle: 'Step inside. Let the story of our studio unfold before you.' }
+      ];
+
+      var greetingTotalEl = document.getElementById('greeting-total');
+      if (greetingTotalEl) greetingTotalEl.textContent = greetings.length;
+
+      // ── Greeting cycle ──
+      window.cycleGreeting = function() {
+        clickCount++;
+        greetingIndex = (greetingIndex + 1) % greetings.length;
+        updateCounters();
+
+        var el = document.getElementById('greeting-text');
+        var subEl = document.getElementById('hero-subtitle');
+        if (!el) return;
+
+        el.classList.add('animate-out');
+        el.classList.remove('animate-in');
+
+        setTimeout(function() {
+          el.innerHTML = greetings[greetingIndex].text;
+          if (subEl) subEl.textContent = greetings[greetingIndex].subtitle;
+          el.classList.remove('animate-out');
+          el.classList.add('animate-in');
+          showToast('Greeting updated', 'success');
+        }, 200);
+      };
+
+      // ── Sparkle / celebrate ──
+      window.triggerSparkle = function() {
+        clickCount++;
+        updateCounters();
+
+        var card = document.querySelector('.hero-card');
+        if (!card) return;
+
+        var ornament = document.querySelector('.ac-ornament');
+        if (ornament) {
+          ornament.style.transform = 'scale(1.2) rotate(20deg)';
+          ornament.style.transition = 'transform 200ms ease';
+          setTimeout(function() {
+            ornament.style.transform = '';
+          }, 300);
+        }
+
+        showToast('Thank you for celebrating with us!', 'success');
+      };
+
+      function updateCounters() {
+        var clickEl = document.getElementById('click-count');
+        var idxEl = document.getElementById('greeting-index-display');
+        if (clickEl) {
+          clickEl.textContent = clickCount;
+          clickEl.classList.add('bump');
+          setTimeout(function() { clickEl.classList.remove('bump'); }, 200);
+        }
+        if (idxEl) idxEl.textContent = greetingIndex + 1;
+      }
+
+      // ── Mood palette ──
+      var paletteItems = [
+        { name: 'Warm Gold', hex: '#c4a779', dot: '#c4a779' },
+        { name: 'Deep Brown', hex: '#231f1a', dot: '#231f1a' },
+        { name: 'Parchment', hex: '#ede8e0', dot: '#ede8e0' },
+        { name: 'Antique Tan', hex: '#9a9088', dot: '#9a9088' },
+        { name: 'Rich Brown', hex: '#3d3028', dot: '#3d3028' },
+        { name: 'Pale Cream', hex: '#f7f3ec', dot: '#f7f3ec' }
+      ];
+
+      var swatchContainer = document.getElementById('mood-swatches');
+      if (swatchContainer) {
+        paletteItems.forEach(function(item, i) {
+          var btn = document.createElement('button');
+          btn.className = 'mood-swatch' + (i === 0 ? ' active' : '');
+          btn.setAttribute('aria-label', item.name + ' (' + item.hex + ')');
+          btn.innerHTML =
+            '<span class="swatch-dot" style="background:' + item.dot + ';border:1px solid rgba(0,0,0,0.12)"></span>' +
+            '<span>' + item.name + '</span>';
+
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.mood-swatch').forEach(function(s) { s.classList.remove('active'); });
+            btn.classList.add('active');
+            clickCount++;
+            updateCounters();
+            showToast(item.name + ' selected \u2014 ' + item.hex, 'info');
+          });
+
+          swatchContainer.appendChild(btn);
+        });
+      }
+
+      // ── Toast ──
+      var toastQueue = [];
+
+      function showToast(message, type) {
+        var container = document.getElementById('toast-container');
+        if (!container) return;
+
+        var toast = document.createElement('div');
+        toast.className = 'toast toast-' + (type || 'info');
+
+        var iconSvg = '';
+        if (type === 'success') {
+          iconSvg = '<svg class="toast-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+        } else {
+          iconSvg = '<svg class="toast-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+        }
+
+        toast.innerHTML = iconSvg + '<span>' + message + '</span>';
+        container.appendChild(toast);
+
+        var dismissTimer = setTimeout(function() {
+          dismissToast(toast);
+        }, 4500);
+
+        toast._dismissTimer = dismissTimer;
+      }
+
+      function dismissToast(toast) {
+        if (!toast || !toast.parentNode) return;
+        toast.classList.add('toast-exit');
+        setTimeout(function() {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 200);
+      }
+
+      // ── Keyboard support ──
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === 'n') {
+          var btn = document.getElementById('greeting-btn');
+          if (document.activeElement !== btn && document.activeElement.tagName !== 'INPUT') {
+            cycleGreeting();
+          }
+        }
+      });
+
+      // ── Initial visit counter (simulated, in-memory) ──
+      var visitEl = document.getElementById('visit-count');
+      if (visitEl) {
+        visitEl.textContent = '1';
+      }
+
+    })();
+  </script>
+
+</body>
+</html>
