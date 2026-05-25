@@ -1,0 +1,27 @@
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local dev
+node_modules/
+*.log
+
+# Secrets — should NEVER be in this repo, but belt-and-braces
+.env
+.env.local
+*.key
+*.pem
+
+# Python (in case any helper scripts get added here later)
+__pycache__/
+*.pyc
+*.pyo
+
+# Backup files from direct edits
+*.bak
+*.bak.preGate

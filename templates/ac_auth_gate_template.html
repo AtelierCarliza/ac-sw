@@ -1,0 +1,191 @@
+<!-- ===== AC Studio Auth Gate v1.0 — auto-injected; do not edit by hand =====
+
+     INSTRUCTIONS for retrofit:
+     1. Open <YourApp>.html in any editor.
+     2. Find the opening <body> tag.
+     3. Paste this ENTIRE BLOCK (from this comment through the closing comment below)
+        immediately AFTER the <body> tag and BEFORE any other content.
+     4. Substitute the 4 placeholders at the top of the IIFE below.
+     5. Save and re-upload to GitHub Pages (or to the Flask templates folder if
+        gating a python-backed tool served from localhost).
+
+     CONFIGURED FOR:
+       APP_TITLE       = <<APP_TITLE>>
+       APP_REQUEST_ID  = <<APP_REQUEST_ID>>
+       SUPABASE_URL    = <<SUPABASE_URL>>
+       SUPABASE_KEY    = <<SUPABASE_PUBLISHABLE_KEY>> (publishable; safe in client code)
+
+     WHAT IT DOES:
+       - Hides the page content until access is verified.
+       - Shows "Sign in with Google" if no Supabase session.
+       - On signed-in: checks profiles.is_admin, requests.creator_user_id (+ revoked flag),
+         and app_access rows. Reveals the app if ANY of (admin / creator-not-revoked / granted) is true.
+       - Otherwise shows "Access denied" with a "Request access" button (inserts into access_requests).
+
+     The brand styling intentionally mirrors AC Studio: warm dark ground, antique gold
+     accent, Cormorant Garamond + DM Mono.
+============================================================================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="dn-auth-style">
+  html body > *:not(#dn-auth-overlay):not(script):not(link):not(style){display:none !important}
+  body{visibility:visible !important;background:#1a1612 !important}
+</style>
+<div id="dn-auth-overlay" style="position:fixed;inset:0;background:#1a1612;display:flex;align-items:center;justify-content:center;z-index:99999;color:#ede8e0;font-family:'DM Sans',system-ui,-apple-system,sans-serif;padding:24px">
+  <div style="font-size:13px;color:#9a9088;font-family:'DM Mono',monospace;letter-spacing:.04em">checking access&hellip;</div>
+</div>
+<script>
+(function(){
+  // ===== Config (substituted at build time) =====
+  var SUPABASE_URL = '<<SUPABASE_URL>>';
+  var SUPABASE_KEY = '<<SUPABASE_PUBLISHABLE_KEY>>';
+  var APP_REQUEST_ID = '<<APP_REQUEST_ID>>';
+  var APP_TITLE = '<<APP_TITLE>>';
+  // Optional Workspace-domain restriction (defence in depth on top of Google's hd param)
+  var ALLOWED_DOMAIN = 'ateliercarliza.com';
+  // ==============================================
+
+  var o = document.getElementById('dn-auth-overlay');
+
+  function gateBox(html){
+    o.innerHTML = '<div style="max-width:440px;width:100%;padding:36px 32px;background:#231f1a;border:1px solid #3a342c;border-radius:6px;box-shadow:0 12px 48px rgba(0,0,0,0.55)">' + html + '</div>';
+  }
+
+  function showSignIn(){
+    gateBox(
+      '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:26px;color:#c4a779;margin-bottom:4px">' + APP_TITLE + '</div>' +
+      '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:#5a5248;letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px">atelier carliza</div>' +
+      '<div style="font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px;color:#9a9088;margin-bottom:24px;line-height:1.55">Sign in with your Atelier Carliza account to continue.</div>' +
+      '<button id="dn-signin-btn" style="width:100%;padding:12px;background:#c4a779;color:#1a1612;border:none;border-radius:4px;font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background .15s">Sign in with Google</button>'
+    );
+    var btn = document.getElementById('dn-signin-btn');
+    btn.addEventListener('mouseenter', function(){ btn.style.background = '#d4b88a'; });
+    btn.addEventListener('mouseleave', function(){ btn.style.background = '#c4a779'; });
+    btn.addEventListener('click', async function(){
+      btn.disabled = true; btn.textContent = 'Redirecting…';
+      try {
+        await sb.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            scopes: 'email profile',
+            redirectTo: location.origin + location.pathname,
+            queryParams: { hd: ALLOWED_DOMAIN }
+          }
+        });
+      } catch (e) {
+        alert('Sign-in failed: ' + (e.message || e));
+        btn.disabled = false; btn.textContent = 'Sign in with Google';
+      }
+    });
+  }
+
+  function showDenied(email){
+    gateBox(
+      '<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:24px;color:#c85050;margin-bottom:6px">Access denied</div>' +
+      '<div style="font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px;color:#ede8e0;margin-bottom:6px">You don\'t have access to <strong style="color:#c4a779">' + APP_TITLE + '</strong>.</div>' +
+      '<div style="font-family:\'DM Mono\',monospace;font-size:11px;color:#5a5248;margin-bottom:22px;letter-spacing:.02em">signed in as <strong style="color:#9a9088">' + (email || '?') + '</strong> &middot; contact your Atelier Carliza admin to request access</div>' +
+      '<button id="dn-req-btn" style="width:100%;padding:12px;background:#c4a779;color:#1a1612;border:none;border-radius:4px;font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em;cursor:pointer;margin-bottom:10px;transition:background .15s">Request access</button>' +
+      '<button id="dn-signout-btn" style="width:100%;padding:12px;background:transparent;color:#9a9088;border:1px solid #3a342c;border-radius:4px;font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px;cursor:pointer;transition:border-color .15s">Sign out</button>'
+    );
+    document.getElementById('dn-signout-btn').addEventListener('click', async function(){
+      try { await sb.auth.signOut(); } catch(e){}
+      location.reload();
+    });
+    document.getElementById('dn-req-btn').addEventListener('click', async function(){
+      var btn = this; btn.disabled = true; btn.textContent = 'Sending…';
+      try {
+        var session = (await sb.auth.getSession()).data.session;
+        if (!session) { btn.textContent = 'Sign in first'; btn.disabled = false; return; }
+        var resp = await fetch(SUPABASE_URL + '/rest/v1/access_requests', {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + session.access_token,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({ request_id: APP_REQUEST_ID, user_id: session.user.id, status: 'pending' })
+        });
+        if (resp.ok) {
+          btn.textContent = '✓ Request sent';
+          btn.style.background = '#5a9e7a'; btn.style.color = '#ede8e0';
+        } else {
+          var t = await resp.text();
+          if (t.indexOf('duplicate') !== -1 || t.indexOf('23505') !== -1) {
+            btn.textContent = 'Already requested';
+          } else {
+            btn.textContent = 'Failed: ' + t.slice(0, 40);
+            btn.disabled = false;
+          }
+        }
+      } catch (e) {
+        btn.textContent = 'Failed: ' + (e.message || e).slice(0, 40);
+        btn.disabled = false;
+      }
+    });
+  }
+
+  function reveal(){
+    var s = document.getElementById('dn-auth-style'); if (s) s.remove();
+    if (o && o.parentNode) o.parentNode.removeChild(o);
+  }
+
+  if (!window.supabase || !window.supabase.createClient) {
+    gateBox('<div style="color:#c85050;font-family:\'DM Sans\',system-ui,sans-serif">Supabase SDK failed to load. Check internet connection and reload.</div>');
+    return;
+  }
+
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
+
+  (async function(){
+    try {
+      var sessionRes = await sb.auth.getSession();
+      var session = sessionRes && sessionRes.data && sessionRes.data.session;
+      if (!session) { showSignIn(); return; }
+
+      // Clean OAuth fragment from URL if present
+      if (location.hash && location.hash.indexOf('access_token') !== -1) {
+        try { history.replaceState(null, '', location.pathname + location.search); } catch(e){}
+      }
+
+      // Defence-in-depth: enforce Workspace domain even if OAuth somehow let a non-AC account through
+      var email = (session.user && session.user.email) || '';
+      if (ALLOWED_DOMAIN && !email.toLowerCase().endsWith('@' + ALLOWED_DOMAIN)) {
+        try { await sb.auth.signOut(); } catch(e){}
+        gateBox('<div style="color:#c85050;font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px">This tool is restricted to ' + ALLOWED_DOMAIN + ' accounts.</div>');
+        return;
+      }
+
+      var userId = session.user.id;
+      var headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + session.access_token };
+      var isAdmin = false, isCreator = false, isGranted = false;
+
+      // Run the three access checks in parallel
+      var checks = await Promise.all([
+        fetch(SUPABASE_URL + '/rest/v1/profiles?select=is_admin&id=eq.' + encodeURIComponent(userId), { headers }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
+        fetch(SUPABASE_URL + '/rest/v1/requests?select=creator_user_id,creator_access_revoked&id=eq.' + APP_REQUEST_ID, { headers }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; }),
+        fetch(SUPABASE_URL + '/rest/v1/app_access?select=request_id&request_id=eq.' + APP_REQUEST_ID + '&user_id=eq.' + encodeURIComponent(userId), { headers }).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; })
+      ]);
+
+      var prof = checks[0]; var reqRow = checks[1]; var grants = checks[2];
+      if (prof && prof[0]) isAdmin = !!prof[0].is_admin;
+      if (reqRow && reqRow[0]) isCreator = (reqRow[0].creator_user_id === userId) && !reqRow[0].creator_access_revoked;
+      if (grants && grants.length > 0) isGranted = true;
+
+      if (isAdmin || isCreator || isGranted) {
+        reveal();
+      } else {
+        showDenied(session.user.email);
+      }
+    } catch (e) {
+      console.error('AC Studio auth gate failed:', e);
+      gateBox('<div style="color:#c85050;font-family:\'DM Sans\',system-ui,sans-serif;font-size:13px">Auth check failed: ' + (e.message || e) + '<br><br>Please reload the page or contact your admin.</div>');
+    }
+  })();
+})();
+</script>
+<!-- ===== END AC Studio Auth Gate ===== -->
